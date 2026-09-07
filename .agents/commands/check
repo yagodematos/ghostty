@@ -1,0 +1,57 @@
+#!/usr/bin/env nu
+
+# Deterministic local validation for this fork. Run from the Nix dev shell:
+#   .agents/commands/check [--full] [--macos] [--test-filter <name>]
+# Outside direnv, use: nix develop -c nu .agents/commands/check ...
+
+def run-command [program: string, args: list<string>] {
+    print $"==> ($program)"
+    run-external $program ...$args
+}
+
+def main [
+    --full(-f) # Also run libghostty-vt tests and typos.
+    --macos(-m) # Build and test the macOS app through its Xcode wrapper.
+    --test-filter: string # Pass a deterministic filter to Zig tests.
+] {
+    let is_macos = $nu.os-info.name == "macos"
+
+    # CI runs this against a clean checkout. Include tracked and unignored
+    # working-tree Zig files, but not generated dependency artifacts.
+    let zig_files = (^git ls-files --cached --others --exclude-standard -- '*.zig' | lines)
+    run-command zig ([fmt --check] ++ $zig_files)
+    run-command prettier [--check .]
+    let nix_files = (^git ls-files --cached --others --exclude-standard -- '*.nix' | lines)
+    run-command alejandra ([--check] ++ $nix_files)
+    if $is_macos {
+        run-command swiftlint [lint --strict]
+    }
+
+    if $test_filter == null {
+        # An explicit empty filter runs all Zig unit tests without attaching
+        # Xcode tests; those are covered by the macOS mode below.
+        let test_args = if $is_macos {
+            [build test "-Dtest-filter="]
+        } else {
+            [build test]
+        }
+        run-command zig $test_args
+    } else {
+        run-command zig [build test $"-Dtest-filter=($test_filter)"]
+    }
+
+    if $full {
+        if $test_filter == null {
+            run-command zig [build test-lib-vt]
+        } else {
+            run-command zig [build test-lib-vt $"-Dtest-filter=($test_filter)"]
+        }
+        run-command typos []
+    }
+
+    let run_macos = $macos or ($full and $is_macos)
+    if $run_macos {
+        run-command zig [build -Demit-macos-app=false]
+        run-command macos/build.nu [--action test]
+    }
+}

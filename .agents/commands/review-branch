@@ -53,19 +53,28 @@ Review the change history between the current branch and its
 base branch. Analyze all relevant code for possible issues, including but
 not limited to:
 
-- Code quality and readability
-- Code style that matches or mimics the rest of the codebase
-- Potential bugs or logical errors
-- Edge cases that may not be handled
-- Performance considerations
-- Security vulnerabilities
-- Backwards compatibility \(if applicable\)
-- Test coverage and effectiveness
+- Correctness, regressions, edge cases, and backwards compatibility
+- Test coverage and effectiveness; identify missing targeted or platform tests
+- Unnecessary divergence from `ghostty-org/ghostty`, especially dependency,
+  CI, build-system, or generated-file changes that make future syncs harder
+- Architecture, API boundaries, and style consistency with nearby code
+- Performance, including startup, rendering, allocation, and hot-path effects
+  where relevant
+- Concurrency, ownership, lifetime, cancellation, and teardown risks where
+  relevant
+- macOS-specific behavior, Xcode integration, sandboxing, accessibility, and
+  platform test coverage where relevant
+- Security and privacy implications where applicable
 
 For test coverage, consider if the changes are in an area of the codebase
 that is testable. If so, check if there are appropriate tests added or
 modified. Consider if the code itself should be modified to be more
 testable.
+
+Start by identifying the branch base and inspecting the diff and nearby
+implementation; do not assume the issue description is complete. Separate
+findings by severity, cite file paths and lines when possible, and state
+explicitly when no issue is found in a review category.
 
 Think deeply about the implications of the changes here and proposed.
 Consult the oracle if you have access to it.
