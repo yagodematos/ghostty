@@ -9,12 +9,37 @@ def run-command [program: string, args: list<string>] {
     run-external $program ...$args
 }
 
+def check-untracked-file [path: string] {
+    let result = (^git diff --check --no-index /dev/null $path | complete)
+    let has_output = ($result.stdout | str length) > 0 or ($result.stderr | str length) > 0
+    if $result.exit_code != 1 or $has_output {
+        error make {
+            msg: $"git diff --check failed for untracked file: ($path)"
+        }
+    }
+}
+
 def main [
     --full(-f) # Also run libghostty-vt tests and typos.
     --macos(-m) # Build and test the macOS app through its Xcode wrapper.
     --test-filter: string # Pass a deterministic filter to Zig tests.
+    --diff-base: string # Check changes from this Git base through HEAD.
 ] {
     let is_macos = $nu.os-info.name == "macos"
+
+    # Detect whitespace errors and unresolved conflict markers without
+    # modifying the working tree. Locally, include staged and unstaged tracked
+    # changes; check untracked files separately. CI supplies the pull request
+    # base to validate submitted commits.
+    if $diff_base == null {
+        run-command git [diff --check HEAD]
+        let untracked_files = (^git ls-files --others --exclude-standard | lines)
+        for path in $untracked_files {
+            check-untracked-file $path
+        }
+    } else {
+        run-command git [diff --check $"($diff_base)...HEAD"]
+    }
 
     # CI runs this against a clean checkout. Include tracked and unignored
     # working-tree Zig files, but not generated dependency artifacts.

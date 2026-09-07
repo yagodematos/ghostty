@@ -75,17 +75,25 @@ shared-core changes when practical. Do not describe commands as passing unless
 they were actually executed. Report the exact commands, whether each passed,
 failed, or was not run, and the reason for any omission.
 
-Use an independent or sub-agent review for changes with meaningful risk or
-cross-cutting effects. `.agents/commands/review-branch` is review-only and
-must never be used to edit code.
+For changes with meaningful risk or cross-cutting effects, prefer a
+fresh-context independent reviewer over implementation-agent self-review.
+`.agents/commands/review-branch` is review-only and must never edit code.
 
 ## Fork and upstream maintenance
 
 This is a long-lived fork with `upstream` configured for
-`ghostty-org/ghostty`. Prefer fork-specific operational material in
-`.agents/` and concise overlays such as this guide. Avoid changing upstream CI,
-dependency definitions, or unrelated files solely for agent convenience.
-Before a sync, inspect the upstream diff and preserve a small, easily
-identifiable fork delta. Code intended for upstream must also meet the
-requirements in `AI_POLICY.md`. AI-assisted development in this fork follows
+`ghostty-org/ghostty`:
+
+- `main` is this fork's shared default branch; fork work branches from and
+  merges into it, and it must not be rebased.
+- `upstream-main` is the pristine mirror of `upstream/main`.
+- Sync direction is `upstream/main` -> `upstream-main` -> `main`.
+
+The detailed procedure is in `.agents/skills/upstream-sync/SKILL.md`.
+Prefer fork-specific operational material in `.agents/` and concise overlays
+such as this guide. The sole CI exception is the standalone fork PR harness at
+`.github/workflows/fork-harness.yml`; do not modify existing upstream CI.
+Avoid changing dependency definitions or unrelated files solely for agent
+convenience. Code intended for upstream must also meet the requirements in
+`AI_POLICY.md`. AI-assisted development in this fork follows
 `.agents/POLICY.md`.

@@ -41,9 +41,7 @@ def main [
   $"
 # Branch Review
 
-Inspect the changes made in this Git branch. Identify any possible issues
-and suggest improvements. Do not write code. Explain the problems clearly
-and propose a brief plan for addressing them.
+Inspect the changes made in this Git branch. Do not write code.
 ($issueContext)
 ## Your Tasks
 
@@ -72,9 +70,12 @@ modified. Consider if the code itself should be modified to be more
 testable.
 
 Start by identifying the branch base and inspecting the diff and nearby
-implementation; do not assume the issue description is complete. Separate
-findings by severity, cite file paths and lines when possible, and state
-explicitly when no issue is found in a review category.
+implementation; do not assume the issue description is complete. Lead with
+actionable findings, ordered by severity, with file paths and lines when
+possible. For each finding, explain the impact and propose a brief remedy.
+Do not require a category-by-category "no issue" report. If there are no
+actionable findings, say that once, then report only material validation gaps
+or residual risks.
 
 Think deeply about the implications of the changes here and proposed.
 Consult the oracle if you have access to it.
