@@ -1,4 +1,22 @@
-# AI Usage Policy
+# AI Use and Contribution Policy
+
+## Development in this fork
+
+This long-lived fork permits carefully supervised AI-assisted development.
+The human responsible for a change must understand it, review its diff, and
+run or explicitly account for appropriate validation. Keep AI-assisted changes
+small, coherent, and attributable in the normal development record.
+
+This section governs work maintained in this fork. It does not relax the
+requirements of `ghostty-org/ghostty` for work that will be submitted upstream.
+
+## Submitting code to ghostty-org/ghostty
+
+The following is the upstream contribution policy. It applies in full to any
+issue, discussion, or pull request sent to `ghostty-org/ghostty`; when it
+conflicts with this fork's development policy, follow it for that submission.
+
+### AI Usage Policy
 
 The Ghostty project has strict rules for AI usage:
 
@@ -34,7 +52,7 @@ These rules apply only to outside contributions to Ghostty. Maintainers
 are exempt from these rules and may use AI tools at their discretion;
 they've proven themselves trustworthy to apply good judgment.
 
-## There are Humans Here
+### There are Humans Here
 
 Please remember that Ghostty is maintained by humans.
 
@@ -50,7 +68,7 @@ And today, most drivers of AI are just not good enough. So, until either
 the people get better, the AI gets better, or both, we have to have
 strict rules to protect maintainers.
 
-## AI is Welcome Here
+### AI is Welcome Here
 
 Ghostty is written with plenty of AI assistance, and many maintainers embrace
 AI tools as a productive tool in their workflow. As a project, we welcome
