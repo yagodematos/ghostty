@@ -87,4 +87,5 @@ This is a long-lived fork with `upstream` configured for
 dependency definitions, or unrelated files solely for agent convenience.
 Before a sync, inspect the upstream diff and preserve a small, easily
 identifiable fork delta. Code intended for upstream must also meet the
-requirements in `AI_POLICY.md`.
+requirements in `AI_POLICY.md`. AI-assisted development in this fork follows
+`.agents/POLICY.md`.
